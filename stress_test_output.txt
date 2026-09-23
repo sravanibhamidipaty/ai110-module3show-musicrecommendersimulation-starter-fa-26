@@ -1,191 +1,54 @@
-Loaded songs: 18
+Stress test output — python -m src.main
+Catalog: 28 songs. Profiles: 3 standard + 2 adversarial edge cases.
+
+Loaded songs: 28
 
 === Profile: High-Energy Pop ===
 Preferences: genre=pop, mood=happy, energy=0.8, likes_acoustic=False
 Top 5 recommendations:
-
-1. Sunrise City
-   Score   : 4.48
-   Reasons :
-     - +2.0 genre match
-     - +1.0 mood match
-     - +0.98 energy closeness
-     - +0.5 non-acoustic preference match
-
-2. Gym Hero
-   Score   : 3.37
-   Reasons :
-     - +2.0 genre match
-     - +0.87 energy closeness
-     - +0.5 non-acoustic preference match
-
-3. Rooftop Lights
-   Score   : 2.46
-   Reasons :
-     - +1.0 mood match
-     - +0.96 energy closeness
-     - +0.5 non-acoustic preference match
-
-4. Night Drive Loop
-   Score   : 1.45
-   Reasons :
-     - +0.95 energy closeness
-     - +0.5 non-acoustic preference match
-
-5. City Cipher
-   Score   : 1.44
-   Reasons :
-     - +0.94 energy closeness
-     - +0.5 non-acoustic preference match
-
+1. Sunrise City        Score 4.46  (+genre +mood +1.96 energy +0.5 non-acoustic)
+2. Rooftop Lights      Score 3.42  (+mood +1.92 energy +0.5 non-acoustic)
+3. Gym Hero            Score 3.24  (+genre +1.74 energy +0.5 non-acoustic)
+4. Retro Arcade        Score 2.50  (+2.00 energy +0.5 non-acoustic)
+5. Block Party         Score 2.46  (+1.96 energy +0.5 non-acoustic)
 
 === Profile: Chill Lofi ===
 Preferences: genre=lofi, mood=chill, energy=0.4, likes_acoustic=True
 Top 5 recommendations:
-
-1. Midnight Coding
-   Score   : 4.48
-   Reasons :
-     - +2.0 genre match
-     - +1.0 mood match
-     - +0.98 energy closeness
-     - +0.5 acoustic preference match
-
-2. Library Rain
-   Score   : 4.45
-   Reasons :
-     - +2.0 genre match
-     - +1.0 mood match
-     - +0.95 energy closeness
-     - +0.5 acoustic preference match
-
-3. Focus Flow
-   Score   : 3.50
-   Reasons :
-     - +2.0 genre match
-     - +1.00 energy closeness
-     - +0.5 acoustic preference match
-
-4. Spacewalk Thoughts
-   Score   : 2.38
-   Reasons :
-     - +1.0 mood match
-     - +0.88 energy closeness
-     - +0.5 acoustic preference match
-
-5. Coffee Shop Stories
-   Score   : 1.47
-   Reasons :
-     - +0.97 energy closeness
-     - +0.5 acoustic preference match
-
+1. Midnight Coding     Score 4.46  (+genre +mood +1.96 energy +0.5 acoustic)
+2. Library Rain        Score 4.40  (+genre +mood +1.90 energy +0.5 acoustic)
+3. Focus Flow          Score 3.50  (+genre +2.00 energy +0.5 acoustic)
+4. Spacewalk Thoughts  Score 3.26  (+mood +1.76 energy +0.5 acoustic)
+5. Coffee Shop Stories Score 2.44  (+1.94 energy +0.5 acoustic)
 
 === Profile: Deep Intense Rock ===
 Preferences: genre=rock, mood=intense, energy=0.9, likes_acoustic=False
 Top 5 recommendations:
+1. Storm Runner        Score 4.48  (+genre +mood +1.98 energy +0.5 non-acoustic)
+2. Gym Hero            Score 3.44  (+mood +1.94 energy +0.5 non-acoustic)
+3. Neon Warehouse      Score 2.48  (+1.98 energy +0.5 non-acoustic)
+4. Glacier Pulse       Score 2.46  (+1.96 energy +0.5 non-acoustic)
+5. Iron Skyline        Score 2.42  (+1.92 energy +0.5 non-acoustic)
 
-1. Storm Runner
-   Score   : 4.49
-   Reasons :
-     - +2.0 genre match
-     - +1.0 mood match
-     - +0.99 energy closeness
-     - +0.5 non-acoustic preference match
-
-2. Gym Hero
-   Score   : 2.47
-   Reasons :
-     - +1.0 mood match
-     - +0.97 energy closeness
-     - +0.5 non-acoustic preference match
-
-3. Neon Warehouse
-   Score   : 1.49
-   Reasons :
-     - +0.99 energy closeness
-     - +0.5 non-acoustic preference match
-
-4. Iron Skyline
-   Score   : 1.46
-   Reasons :
-     - +0.96 energy closeness
-     - +0.5 non-acoustic preference match
-
-5. Sunrise City
-   Score   : 1.42
-   Reasons :
-     - +0.92 energy closeness
-     - +0.5 non-acoustic preference match
-
-
-=== Profile: Edge Case: High Energy + Sad Mood ===
+=== Profile: Edge Case: High Energy + Sad Mood (conflicting) ===
 Preferences: genre=pop, mood=sad, energy=0.9, likes_acoustic=False
 Top 5 recommendations:
-
-1. Gym Hero
-   Score   : 3.47
-   Reasons :
-     - +2.0 genre match
-     - +0.97 energy closeness
-     - +0.5 non-acoustic preference match
-
-2. Sunrise City
-   Score   : 3.42
-   Reasons :
-     - +2.0 genre match
-     - +0.92 energy closeness
-     - +0.5 non-acoustic preference match
-
-3. Storm Runner
-   Score   : 1.49
-   Reasons :
-     - +0.99 energy closeness
-     - +0.5 non-acoustic preference match
-
-4. Neon Warehouse
-   Score   : 1.49
-   Reasons :
-     - +0.99 energy closeness
-     - +0.5 non-acoustic preference match
-
-5. Iron Skyline
-   Score   : 1.46
-   Reasons :
-     - +0.96 energy closeness
-     - +0.5 non-acoustic preference match
-
+1. Gym Hero            Score 3.44  (+genre +1.94 energy +0.5 non-acoustic)
+2. Sunrise City        Score 3.34  (+genre +1.84 energy +0.5 non-acoustic)
+3. Storm Runner        Score 2.48  (+1.98 energy +0.5 non-acoustic)
+4. Neon Warehouse      Score 2.48  (+1.98 energy +0.5 non-acoustic)
+5. Glacier Pulse       Score 2.46  (+1.96 energy +0.5 non-acoustic)
+Note: "sad" mood matches no song, so mood contributes 0 for everyone; energy
+closeness + genre decide the ranking. This is the conflicting-preference case.
 
 === Profile: Edge Case: Unknown Genre/Mood ===
 Preferences: genre=kpop, mood=melancholic, energy=0.5, likes_acoustic=True
 Top 5 recommendations:
-
-1. Midnight Coding
-   Score   : 1.42
-   Reasons :
-     - +0.92 energy closeness
-     - +0.5 acoustic preference match
-
-2. Focus Flow
-   Score   : 1.40
-   Reasons :
-     - +0.90 energy closeness
-     - +0.5 acoustic preference match
-
-3. Coffee Shop Stories
-   Score   : 1.37
-   Reasons :
-     - +0.87 energy closeness
-     - +0.5 acoustic preference match
-
-4. Library Rain
-   Score   : 1.35
-   Reasons :
-     - +0.85 energy closeness
-     - +0.5 acoustic preference match
-
-5. Winter Letters
-   Score   : 1.33
-   Reasons :
-     - +0.83 energy closeness
-     - +0.5 acoustic preference match
-
+1. Blue Monsoon        Score 2.40  (+1.90 energy +0.5 acoustic)
+2. Midnight Coding     Score 2.34  (+1.84 energy +0.5 acoustic)
+3. Focus Flow          Score 2.30  (+1.80 energy +0.5 acoustic)
+4. Coffee Shop Stories Score 2.24  (+1.74 energy +0.5 acoustic)
+5. Library Rain        Score 2.20  (+1.70 energy +0.5 acoustic)
+Note: neither "kpop" nor "melancholic" exists in the catalog, so genre and mood
+both contribute 0. Ranking collapses to pure energy closeness + acoustic bonus —
+the graceful-fallback behavior.

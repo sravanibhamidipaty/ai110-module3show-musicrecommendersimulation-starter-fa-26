@@ -1,25 +1,24 @@
 # 🎧 Model Card: Music Recommender Simulation
 
-## 1. Model Name  
+## 1. Model Name
 
-Give your model a short, descriptive name.  
-Example: **VibeFinder 1.0**  
+**VibeFinder 1.0**
 
----
-
-## 2. Intended Use  
-
-Describe what your recommender is designed to do and who it is for. 
-
-Prompts:  
-
-- What kind of recommendations does it generate  
-- What assumptions does it make about the user  
-- Is this for real users or classroom exploration  
+A content-based music recommender that matches songs to a listener's stated taste.
 
 ---
 
-## 3. How the Model Works  
+## 2. Intended Use
+
+VibeFinder suggests songs from a small catalog based on a user's favorite genre, favorite mood, target energy, and acoustic preference. It generates a ranked top-5 list with a plain-language reason for each pick.
+
+- **What it generates:** an explainable, ranked list of song suggestions.
+- **What it assumes:** the user can describe their taste as a few simple preferences, and every song is honestly tagged.
+- **Who it's for:** this is a **classroom simulation** for learning how recommenders work — not a production system for real listeners.
+
+---
+
+## 3. How the Model Works
 
 Think of the recommender as a judge giving every song a point total, then lining the songs up from highest to lowest and handing back the top few.
 
@@ -36,62 +35,59 @@ The judge adds those pieces into one score and also writes down *why* it gave th
 
 ---
 
-## 4. Data  
+## 4. Data
 
-Describe the dataset the model uses.  
-
-Prompts:  
-
-- How many songs are in the catalog  
-- What genres or moods are represented  
-- Did you add or remove data  
-- Are there parts of musical taste missing in the dataset  
+- **Size:** 28 songs (expanded from the 18-song starter by adding 10 tracks).
+- **Features per song:** id, title, artist, genre, mood, energy, tempo_bpm, valence, danceability, acousticness.
+- **Coverage:** 25 genres and 24 moods, from pop, lofi, and rock to techno, doom metal, funk, and new age. Energy spans 0.20–0.94.
+- **What I added:** genres and moods missing from the starter (world, chiptune, fusion, soul, future bass, etc.) so results aren't limited to a few styles.
+- **What's missing:** the catalog is tiny compared to a real service, several genres have only one entry, and there's no listening history — so the system can only do content matching, not collaborative filtering.
 
 ---
 
-## 5. Strengths  
+## 5. Strengths
 
-Where does your system seem to work well  
-
-Prompts:  
-
-- User types for which it gives reasonable results  
-- Any patterns you think your scoring captures correctly  
-- Cases where the recommendations matched your intuition  
+- **Clear-taste profiles work well.** When a user's genre, mood, and energy all point the same way (e.g. Chill Lofi at energy 0.40), the top results are exactly the right tracks (Midnight Coding, Library Rain, Focus Flow) and every pick lines up with intuition.
+- **Explanations are honest.** Each recommendation lists the exact points earned, so it's easy to see *why* a song ranked where it did.
+- **Graceful fallback.** For unknown genres/moods, the system doesn't crash or invent matches — it falls back to energy closeness and still returns a sensible calm-or-hyped list.
 
 ---
 
-## 6. Limitations and Bias 
+## 6. Limitations and Bias
 
 This system can create a filter bubble because songs that are closest in energy keep rising to the top, even when mood does not match. During the experiment, I doubled energy weight and cut genre weight in half, and this made high-energy songs dominate many profiles. That is why tracks like Gym Hero still show up for users who asked for happy pop or even conflicting moods, because its energy is close and it also gets genre points for pop. Another limitation is that the catalog is small and mood labels are narrow, so users with uncommon moods or genres get results based mostly on energy distance instead of true taste fit.
 
+Put plainly for a non-programmer: "Gym Hero" keeps showing up for people who just want "Happy Pop" because it *is* pop (so it grabs the genre points) and its energy is very close to what those users asked for. The system rewards being loud-and-pop more than it rewards actually being *happy*, so an intense workout song sneaks into a happy playlist. That's the bias — the math notices intensity and genre far more than it notices emotion.
+
 ---
 
-## 7. Evaluation  
+## 7. Evaluation
 
 I tested five profiles: High-Energy Pop, Chill Lofi, Deep Intense Rock, Edge Case High Energy + Sad Mood, and Edge Case Unknown Genre/Mood. I looked at the top 5 songs and checked whether the reasons matched what the profile asked for. The results were partly accurate and partly just different after the weight shift: genre mattered less, and energy closeness took over the ranking. The most surprising pattern was that Gym Hero kept appearing for multiple profiles, not because it matched mood well, but because its energy is very close to high-energy targets and it is in the pop genre. In plain language, the model is good at matching "vibe intensity" but weaker at understanding emotional intent.
 
----
+**Profile-pair comparisons:**
 
-## 8. Future Work  
-
-Ideas for how you would improve the model next.  
-
-Prompts:  
-
-- Additional features or preferences  
-- Better ways to explain recommendations  
-- Improving diversity among the top results  
-- Handling more complex user tastes  
+- **High-Energy Pop vs. Chill Lofi:** Pop pulled bright, high-energy tracks (Sunrise City, Rooftop Lights) while Lofi pulled calm, acoustic ones (Midnight Coding, Library Rain). This makes sense — the target energy (0.8 vs 0.4) and acoustic preference (False vs True) flip, so the two lists share almost no songs. This is the clearest sign the preferences actually steer the output.
+- **Chill Lofi vs. Deep Intense Rock:** opposite ends of the energy scale. Lofi favors low-energy, acoustic-leaning songs; Rock favors high-energy, non-acoustic ones (Storm Runner, Gym Hero). The acoustic bonus reinforces the split — the same energy gap that helps a mellow track for Lofi hurts it for Rock.
+- **High-Energy Pop vs. Edge Case (High Energy + Sad):** both want energy 0.8–0.9 and pop, so they overlap on Gym Hero and Sunrise City. The difference: "sad" matches no song, so the sad profile loses all mood points and its scores are lower across the board. It shows the system can't honor an emotion it has no data for — it silently ignores it.
+- **Deep Intense Rock vs. Edge Case (Unknown Genre/Mood):** Rock gets a clean genre+mood top pick (Storm Runner, 4.48); the unknown "kpop/melancholic" profile gets no genre or mood points at all, so every score collapses to just energy + acoustic (~2.2–2.4). Same engine, but with no matching tags the ranking is decided purely by energy distance.
 
 ---
 
-## 9. Personal Reflection  
+## 8. Future Work
 
-A few sentences about your experience.  
+- **Rebalance or normalize the weights** so genre can't crowd out mood and energy; consider capping how much any single factor can contribute.
+- **Add a diversity rule** so the top 5 don't repeat the same artist or genre (a "filter-bubble breaker").
+- **Handle unknown/close tags smarter** — fuzzy genre matching or mood synonyms so "melancholic" can still connect to "wistful" or "moody."
 
-Prompts:  
+---
 
-- What you learned about recommender systems  
-- Something unexpected or interesting you discovered  
-- How this changed the way you think about music recommendation apps  
+## 9. Personal Reflection
+
+**Biggest learning moment:** seeing that a recommendation is really just *scoring + sorting*. Once the score function returned a number and reasons, the "recommendation" was just ranking that list — there was no magic, and that demystified how big apps work at a basic level.
+
+**How AI helped, and when I double-checked it:** AI was useful for brainstorming the scoring recipe and generating diverse sample songs quickly. But I had to verify the math myself — especially the energy-closeness term and the weight experiment — because a plausible-sounding suggestion can still skew results (the Gym Hero filter-bubble was something I only caught by actually running the profiles, not by trusting the design on paper).
+
+**What surprised me:** how much a handful of simple rules can *feel* like a real recommender. With just genre, mood, and energy, the top picks genuinely matched the vibe of each profile — yet the same simplicity is exactly what created the bias.
+
+**What I'd try next:** adding a listening-history signal (a tiny bit of collaborative filtering) and a diversity penalty, so the system balances "matches your taste" with "shows you something new."
