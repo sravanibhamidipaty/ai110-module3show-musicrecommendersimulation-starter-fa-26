@@ -153,13 +153,22 @@ def load_songs(csv_path: str) -> List[Dict]:
 
 
 def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
-    """
-    Scores a single song against user preferences.
-    Required by recommend_songs() and src/main.py
-    """
-    # TODO: Implement scoring logic using your Algorithm Recipe from Phase 2.
-    # Expected return format: (score, reasons)
-    return []
+    """Score one song against user prefs; returns (score, reasons) per the recipe."""
+    user_genre = user_prefs.get("favorite_genre", user_prefs.get("genre", ""))
+    user_mood = user_prefs.get("favorite_mood", user_prefs.get("mood", ""))
+    target_energy = float(
+        user_prefs.get("target_energy", user_prefs.get("energy", 0.5))
+    )
+    likes_acoustic = user_prefs.get("likes_acoustic")
+
+    breakdown = _score_song(
+        song_dict=song,
+        user_genre=user_genre,
+        user_mood=user_mood,
+        target_energy=target_energy,
+        likes_acoustic=likes_acoustic,
+    )
+    return breakdown["total"], breakdown["reasons"]
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
     """

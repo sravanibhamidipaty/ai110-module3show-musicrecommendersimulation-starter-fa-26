@@ -21,16 +21,18 @@ Prompts:
 
 ## 3. How the Model Works  
 
-Explain your scoring approach in simple language.  
+Think of the recommender as a judge giving every song a point total, then lining the songs up from highest to lowest and handing back the top few.
 
-Prompts:  
+For each song, the judge looks at four things about the listener's taste:
 
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
+- **Genre** — if the song's genre is the listener's favorite, it earns points. This is the strongest signal.
+- **Mood** — if the song's mood matches the listener's favorite mood, it earns points too, but fewer than genre.
+- **Energy** — the listener says how energetic they want their music (a number from calm to intense). A song scores higher the *closer* its energy is to that target — so a song that's exactly right beats one that's a little too mellow or too hyped. This is about matching a vibe, not just "louder is better."
+- **Acoustic preference** — a small bonus if the song's acoustic-ness lines up with whether the listener likes acoustic or produced music.
 
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+The judge adds those pieces into one score and also writes down *why* it gave those points ("+1.0 genre match", "+1.96 energy closeness"), so the recommendation is explainable, not a black box. To pick recommendations, the system scores every song in the catalog and sorts the whole list by score, then returns the top 5.
+
+**What changed from the starter:** the starter left the scoring function empty. I implemented it to return both a number and a list of reasons, and (in the experiment) I tuned the weights — doubling the energy weight and adjusting genre — which shifted the rankings toward "energy vibe" matches and revealed the filter-bubble behavior documented below.
 
 ---
 

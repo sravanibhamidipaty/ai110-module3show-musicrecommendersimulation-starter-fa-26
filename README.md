@@ -29,7 +29,22 @@ Some prompts to answer:
 
 You can include a simple diagram or bullet list if helpful.
 
-Real-world recommendation systems combine many signals (content, past behavior, context, and popularity) to estimate how likely a user is to enjoy each item, then rank results to balance relevance and variety. This simulation focuses on transparent content-based signals only: it priorities songs that match a user on genre and mood while rewarding songs whose energy is close to the user target, with acoustic preference used as an additional tie-break style signal.
+Real-world recommendation systems combine many signals (content, past behavior, context, and popularity) to estimate how likely a user is to enjoy each item, then rank results to balance relevance and variety. Platforms like Spotify blend **collaborative filtering** (learning from what similar listeners played) with **content-based filtering** (matching song attributes to your taste). This simulation focuses on transparent **content-based** signals only: it prioritizes songs that match a user on genre and mood while rewarding songs whose energy is close to the user's target, with acoustic preference used as an additional tie-break style signal. The tradeoff is that a purely content-based system tends to recommend "more of the same," which is the filter-bubble risk documented later in the model card.
+
+### Features Used by Each Object
+
+**`Song`** carries these attributes (from `data/songs.csv`):
+- `id`, `title`, `artist` — identity fields (not scored)
+- `genre` — categorical, used for exact genre match
+- `mood` — categorical, used for exact mood match
+- `energy` (0–1) — numeric, used for closeness-to-target scoring
+- `tempo_bpm`, `valence`, `danceability`, `acousticness` — additional attributes; `acousticness` is used for the acoustic tie-break, the rest are available for future scoring extensions
+
+**`UserProfile`** stores the taste preferences the scorer compares against:
+- `favorite_genre` — matched against each song's `genre`
+- `favorite_mood` — matched against each song's `mood`
+- `target_energy` (0–1) — the energy the user wants; songs are rewarded for being close to it
+- `likes_acoustic` (bool) — drives the acoustic vs. non-acoustic tie-break bonus
 
 ### Plan Input to Process to Output
 
@@ -66,8 +81,24 @@ Ranking rule:
 - Return top `k` songs.
 
 Potential bias note:
-- This system may over-prioritize genre, which can push down strong mood or energy matches from other genres.
-- Because the catalog is small, recommendations also reflect dataset coverage and may under-serve niche tastes.
+- This system may over-prioritize genre, which can push down strong mood or energy matches from other genres. Genre is worth `+2.0` — twice the mood match — so a same-genre song almost always outranks a different-genre song even when the second is a better mood/energy fit. This is the core filter-bubble risk: the recommender keeps returning the user's favorite genre and rarely surfaces good cross-genre matches.
+- Because the catalog is small (28 songs), recommendations also reflect dataset coverage and may under-serve niche tastes. Genres with only one entry can never form a varied result set.
+- The acoustic tie-break only rewards the extremes (`>= 0.60` or `<= 0.40`), so mid-acoustic songs (0.40–0.60) get no signal either way.
+
+### Example User Profile (Step 2)
+
+A concrete taste profile the recommender compares against:
+
+```python
+user_profile = {
+    "favorite_genre": "lofi",
+    "favorite_mood": "chill",
+    "target_energy": 0.40,
+    "likes_acoustic": True,
+}
+```
+
+This profile is deliberately specific enough to differentiate "chill lofi" from "intense rock": a low `target_energy` (0.40) plus the `lofi`/`chill` anchors will rank calm, acoustic-leaning tracks highly and push high-energy rock/metal to the bottom. It is not too narrow — the energy-closeness term still lets moderately different songs score partial points, so results aren't limited to exact genre+mood twins.
 
 ### Data Flow Map
 
@@ -211,16 +242,51 @@ Stress test screenshots:
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
+Output from `python -m src.main` for the default High-Energy Pop profile (genre=pop, mood=happy, energy=0.8):
 
 ```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+Loaded songs: 28
+
+=== Profile: High-Energy Pop ===
+Preferences: genre=pop, mood=happy, energy=0.8, likes_acoustic=False
+Top 5 recommendations:
+
+1. Sunrise City
+   Score   : 4.46
+   Reasons :
+     - +1.0 genre match
+     - +1.0 mood match
+     - +1.96 energy closeness (x2.0)
+     - +0.5 non-acoustic preference match
+
+2. Rooftop Lights
+   Score   : 3.42
+   Reasons :
+     - +1.0 mood match
+     - +1.92 energy closeness (x2.0)
+     - +0.5 non-acoustic preference match
+
+3. Gym Hero
+   Score   : 3.24
+   Reasons :
+     - +1.0 genre match
+     - +1.74 energy closeness (x2.0)
+     - +0.5 non-acoustic preference match
+
+4. Retro Arcade
+   Score   : 2.50
+   Reasons :
+     - +2.00 energy closeness (x2.0)
+     - +0.5 non-acoustic preference match
+
+5. Block Party
+   Score   : 2.46
+   Reasons :
+     - +1.96 energy closeness (x2.0)
+     - +0.5 non-acoustic preference match
 ```
+
+The top result, "Sunrise City", is a pop/happy track with energy 0.82 — a full match on genre, mood, energy, and the non-acoustic preference, exactly what the recipe should reward most.
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
 

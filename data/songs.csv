@@ -17,3 +17,13 @@ id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
 16,Neon Warehouse,Glass District,house,euphoric,0.89,126,0.83,0.91,0.08
 17,Winter Letters,North Orchard,folk,wistful,0.33,76,0.52,0.38,0.88
 18,Velvet Hour,Sable Lane,rnb,romantic,0.47,92,0.74,0.69,0.53
+19,Desert Mirage,Dune Choir,world,uplifting,0.63,102,0.75,0.70,0.55
+20,Glacier Pulse,Subzero Kit,techno,hypnotic,0.88,128,0.52,0.90,0.06
+21,Paper Boats,Willow Hymn,acoustic,tender,0.30,74,0.68,0.44,0.94
+22,Retro Arcade,Pixel Tide,chiptune,playful,0.80,140,0.86,0.78,0.09
+23,Blue Monsoon,Raga Lines,fusion,contemplative,0.45,86,0.58,0.55,0.63
+24,Steel Cathedral,Grave Anthem,doom metal,brooding,0.70,64,0.33,0.40,0.15
+25,Sunday Gospel,Harbor Voices,soul,joyful,0.66,100,0.88,0.71,0.42
+26,Neon Tokyo,Circuit Sakura,future bass,energetic,0.85,150,0.72,0.84,0.11
+27,Quiet Harbor,Still Water,new age,peaceful,0.20,58,0.61,0.30,0.95
+28,Block Party,Uptown Cadence,funk,groovy,0.78,112,0.90,0.89,0.20
